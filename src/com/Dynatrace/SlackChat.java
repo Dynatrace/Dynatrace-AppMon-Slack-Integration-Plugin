@@ -18,9 +18,9 @@ import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 
 
-public class HipChat implements ActionV2 {
+public class SlackChat implements ActionV2 {
 
-	private static final Logger log = Logger.getLogger(HipChat.class.getName());
+	private static final Logger log = Logger.getLogger(SlackChat.class.getName());
 
 
 	/**
@@ -115,7 +115,7 @@ public class HipChat implements ActionV2 {
                         //JSON CREATION
 			JSONObject jsonObj = new JSONObject();
                         
-                        // Compose string chat_message => This message will be sent to the HipChat channel
+                        // Compose string chat_message => This message will be sent to the SlackChat channel
                         String chat_message = null;
                         chat_message = "Dynatrace incident triggered:\n " + incident.getIncidentRule().getName();
                         //chat_message = chat_message + " <ul>";
@@ -146,9 +146,9 @@ public class HipChat implements ActionV2 {
                         //chat_message = chat_message + "</ul>";
 			
                         /*
-                         * Create JSON Object => Will be sent to HipChat via HTTP POST
+                         * Create JSON Object => Will be sent to SlackChat via HTTP POST
                          */
-			// Some lines commented out from HipChat, which are not needed.
+			// Some lines commented out from SlackChat, which are not needed.
 			//jsonObj.put("color", "green");
 			jsonObj.put("text", chat_message);
 			//jsonObj.put("notify", false);

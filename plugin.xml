@@ -14,6 +14,6 @@
     </configuration>
   </extension>
   <extension point="com.dynatrace.diagnostics.pdk.action" id="com.Slack.Chat.action" name="SlackChat">
-    <plugin configid="com.Slack.Chat" class="com.Dynatrace.HipChat" />
+    <plugin configid="com.Slack.Chat" class="com.Dynatrace.SlackChat" />
   </extension>
 </plugin>
