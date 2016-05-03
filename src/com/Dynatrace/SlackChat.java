@@ -13,8 +13,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.logging.Logger;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 
@@ -97,10 +100,13 @@ public class SlackChat implements ActionV2 {
 			String message = incident.getMessage();
 			log.fine("Incident " + message + " triggered.");
 			
-			//SET URL FROM USER INPUT FIELD
+			//SET INPUT FIELDS
 			URL url = env.getConfigUrl("url");
+            boolean notifyAll = env.getConfigBoolean("notifyAll");
+            String dashboard = env.getConfigString("linkedDashboard");
+
                         
-                        //OPEN URL CONNECTION AND SET TIMEOUTS - USES CONNECTION METHOD 'POST'
+            //OPEN URL CONNECTION AND SET TIMEOUTS - USES CONNECTION METHOD 'POST'
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("POST");
 			con.setConnectTimeout(5000);
@@ -114,29 +120,29 @@ public class SlackChat implements ActionV2 {
                         
                         //JSON CREATION
 			JSONObject jsonObj = new JSONObject();
-                        
+                        String state = "";
                         // Compose string chat_message => This message will be sent to the SlackChat channel
-                        String chat_message = null;
-                        chat_message = "Dynatrace incident triggered:\n " + incident.getIncidentRule().getName();
+                        if (notifyAll) {
+                            state = "<!channel> ";
+                        }
+			            if (incident.isOpen()) {
+                            state = state + "dynatrace incident triggered:";
+                        } else if (incident.isClosed()) {
+                            state = state + "dynatrace incident ended:";
+                        }
+                        String title =  incident.getIncidentRule().getName();
+                        String chat_message = "";
                         //chat_message = chat_message + " <ul>";
-                        chat_message = chat_message + "Incident UUID: " + incident.getKey().getUUID() + "\n";
+                        //chat_message = chat_message + "Incident UUID: " + incident.getKey().getUUID() + "\n";
                         
                         chat_message = chat_message + "Incident start: " + incident.getStartTime() + "\n";
                         chat_message = chat_message + "Incident end: " + incident.getEndTime() + "\n";
                         
-                        if (incident.isOpen()){
-                            chat_message = chat_message + "Status: Open \n";
-			}
-                        else if (incident.isClosed()){
-                            chat_message = chat_message + "Status: Closed \n";
-                        }
-                        else {
-                            chat_message = chat_message + "Status: Unknown status \n";
-                        }
+
                         
-//                        chat_message = chat_message + "<li><strong>Status state code:</strong> " + incident.getState() + "</li>";
-                        
-                        chat_message = chat_message + "Severity: " + incident.getSeverity().toString() + "\n";
+//                      chat_message = chat_message + "<li><strong>Status state code:</strong> " + incident.getState() + "</li>";
+
+
                         chat_message = chat_message + "Message: " + message + "\n";
                         
                         for (Violation violation : incident.getViolations()) {
@@ -148,11 +154,32 @@ public class SlackChat implements ActionV2 {
                         /*
                          * Create JSON Object => Will be sent to SlackChat via HTTP POST
                          */
-			// Some lines commented out from SlackChat, which are not needed.
-			//jsonObj.put("color", "green");
-			jsonObj.put("text", chat_message);
-			//jsonObj.put("notify", false);
-			//jsonObj.put("message_format", "html");
+            String severity = incident.getSeverity().toString();
+            String color = "good";
+            switch (severity) {
+                case "Error" : color = "danger";
+                    break;
+                case "Warning" : color = "warning";
+                    break;
+                default : color = "good";
+            }
+
+            JSONObject attachment = new JSONObject();
+            attachment.put("title", title);
+            attachment.put("color", color);
+            attachment.put("text", chat_message);
+            if (!(dashboard == null||dashboard.equals("")||dashboard.isEmpty())) {
+                attachment.put("title_link", "http://" + incident.getServerName() + "/rest/management/reports/create/" + URLEncoder.encode(dashboard, "UTF-8").replaceAll("\\+", "%20"));
+            }
+            JSONArray attachArray = new JSONArray();
+
+            attachArray.add(attachment);
+
+            jsonObj.put("username", "dynatrace");
+            jsonObj.put("icon_url", "https://media.glassdoor.com/sqll/309684/dynatrace-squarelogo-1458744847928.png");
+			jsonObj.put("text", state);
+            jsonObj.put("attachments", attachArray);
+
                         
                         
                         //JSON TO STRING
