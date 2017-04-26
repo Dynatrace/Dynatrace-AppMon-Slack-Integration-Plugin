@@ -1,3 +1,6 @@
+# Resulting binaries should not be part of a source repo
+build/
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -48,5 +51,6 @@ Temporary Items
 #[Bb]uild/
 
 # Intellij IDEA
+.idea/
 *.iml
 bin/
