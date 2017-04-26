@@ -46,3 +46,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 #[Bb]uild/
+
+# Intellij IDEA
+*.iml
+bin/
