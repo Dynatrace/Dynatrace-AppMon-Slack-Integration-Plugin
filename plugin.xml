@@ -6,16 +6,16 @@
     <information>
       <category value="" />
       <displayname value="SlackChat" />
-      <description value="This Dynatrace plugin can send incident messages to a webhook defined in slack" />
+      <description value="This Dynatrace plugin can send incident messages to a webhook defined in Slack" />
       <supportlevel value="unsupported" />
     </information>
     <configuration>
       <property key="url" label="URL" type="url" description="URL of the Slack channel where the incident message should be sent to. In order to get this URL, one needs to configure a WebHook for that channel to be able to receive external messages. This integration can easily be enabled in the Slack web UI." default="" />
-      <property key="notifyAll" label="Notify All" type="boolean" description="tags @channel when alert is fired" default="false" />
+      <property key="notifyAll" label="Notify All" type="boolean" description="Tags @channel when alert is fired" default="false" />
       <property key="linkedDashboard" label="Linked Dashboard" type="string" description="Full name of dashboard to link to in alert.  Blank = none" default="" multiline="false" />
     </configuration>
   </extension>
   <extension point="com.dynatrace.diagnostics.pdk.action" id="com.Slack.Chat.action" name="SlackChat">
-    <plugin configid="com.Slack.Chat" class="com.Dynatrace.SlackChat" />
+    <plugin configid="com.Slack.Chat" class="com.dynatrace.SlackChat" />
   </extension>
 </plugin>

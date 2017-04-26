@@ -1,3 +1,6 @@
+# Resulting binaries should not be part of a source repo
+build/
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -46,3 +49,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 #[Bb]uild/
+
+# Intellij IDEA
+.idea/
+*.iml
+bin/

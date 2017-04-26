@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-SymbolicName: com.Slack.Chat;singleton:=true
-Bundle-Version: 0.10.0
+Bundle-Version: 0.10.1
 Bundle-Name: SlackChat
 Bundle-ClassPath: .,lib/json-simple-1.1.1.jar
 Require-Bundle: com.dynatrace.diagnostics.sdk
