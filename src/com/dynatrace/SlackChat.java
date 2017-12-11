@@ -60,6 +60,7 @@ public class SlackChat implements ActionV2 {
 			final boolean notifyAll = env.getConfigBoolean("notifyAll");
 			final String dashboardLink = env.getConfigString("linkedDashboard");
 			final URL channelUrl = env.getConfigUrl("url");
+			String strPostToChannel = env.getConfigString("postToChannel");
 
 			String slackMessage = getSlackMessage(incident, notifyAll, dashboardLink);
 
@@ -139,6 +140,8 @@ public class SlackChat implements ActionV2 {
 		jsonObj.put("icon_url", "https://media.glassdoor.com/sqll/309684/dynatrace-squarelogo-1458744847928.png");
 		jsonObj.put("text", getState(incident, notifyAll));
 		jsonObj.put("attachments", attachArray);
+		
+		jsonObj.put("channel", strPostToChannel);
 
 		return jsonObj.toJSONString();
 	}
